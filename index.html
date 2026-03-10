@@ -3,201 +3,185 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔧 Industrial Machine Search</title>
+<title>Industrial Machine Finder</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 20px; }
-  .container { max-width: 960px; margin: 0 auto; }
-  h1 { font-size: 1.6rem; font-weight: 700; color: #38bdf8; margin-bottom: 4px; }
-  .subtitle { color: #94a3b8; font-size: 0.85rem; margin-bottom: 24px; }
-  .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
-  input[type=text] {
-    flex: 1; padding: 12px 16px; border-radius: 8px; border: 1px solid #334155;
-    background: #1e293b; color: #f1f5f9; font-size: 1rem; outline: none;
-  }
-  input[type=text]:focus { border-color: #38bdf8; }
-  .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: opacity .2s; }
-  .btn:hover { opacity: 0.85; }
-  .btn-primary { background: #0ea5e9; color: white; }
-  .btn-success { background: #10b981; color: white; }
-  .btn-secondary { background: #475569; color: white; }
-  .btn-sm { padding: 6px 12px; font-size: 0.78rem; border-radius: 6px; }
-  .sites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 20px; }
-  .site-card {
-    background: #1e293b; border: 1px solid #334155; border-radius: 8px;
-    padding: 10px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: border-color .2s;
-  }
-  .site-card:hover { border-color: #38bdf8; }
-  .site-card input[type=checkbox] { width: 16px; height: 16px; accent-color: #38bdf8; cursor: pointer; }
-  .site-card label { cursor: pointer; font-size: 0.88rem; font-weight: 500; }
-  .site-card .tag { font-size: 0.68rem; color: #64748b; }
-  .controls { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
-  .controls span { color: #64748b; font-size: 0.82rem; margin-left: 4px; }
-  #results { display: none; }
-  #results h2 { font-size: 1rem; color: #94a3b8; margin-bottom: 12px; }
-  table { width: 100%; border-collapse: collapse; }
-  th { background: #1e293b; color: #94a3b8; font-size: 0.78rem; text-align: left; padding: 8px 12px; border-bottom: 1px solid #334155; }
-  td { padding: 10px 12px; border-bottom: 1px solid #1e293b; font-size: 0.88rem; vertical-align: middle; }
-  tr:hover td { background: #1e293b; }
-  a.link-btn {
-    display: inline-block; padding: 5px 12px; background: #0ea5e9; color: white;
-    border-radius: 6px; text-decoration: none; font-size: 0.78rem; font-weight: 600;
-  }
-  a.link-btn:hover { background: #0284c7; }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; background: #1e3a5f; color: #38bdf8; }
-  .select-all-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: #94a3b8; font-size: 0.83rem; }
-  #copyExcel { display: none; margin-top: 12px; }
-  textarea#excelData { width: 100%; height: 180px; background: #1e293b; border: 1px solid #334155; color: #94a3b8; border-radius: 8px; padding: 10px; font-size: 0.78rem; font-family: monospace; resize: vertical; }
-  .footer { margin-top: 32px; color: #334155; font-size: 0.75rem; text-align: center; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#0f172a;color:#e2e8f0;padding:20px}
+.wrap{max-width:1100px;margin:0 auto}
+h1{color:#38bdf8;font-size:1.4rem;margin-bottom:4px}
+p.sub{color:#64748b;font-size:.82rem;margin-bottom:18px}
+.row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+input[type=text]{flex:1;min-width:200px;padding:10px 14px;border-radius:7px;border:1px solid #334155;background:#1e293b;color:#fff;font-size:.95rem;outline:none}
+input[type=text]:focus{border-color:#38bdf8}
+button{padding:10px 16px;border:none;border-radius:7px;cursor:pointer;font-weight:700;font-size:.85rem}
+.b1{background:#0ea5e9;color:#fff}
+.b2{background:#10b981;color:#fff}
+.b3{background:#475569;color:#fff}
+.b4{background:#4285f4;color:#fff}
+.ctrl{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;font-size:.82rem;color:#94a3b8}
+.cnt{background:#1e3a5f;color:#38bdf8;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-bottom:18px}
+.card{background:#1e293b;border:1px solid #2d3f55;border-radius:7px;padding:8px 11px;display:flex;align-items:flex-start;gap:8px;cursor:pointer}
+.card:hover{border-color:#38bdf8}
+.card input{width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;margin-top:2px;flex-shrink:0}
+.card .nm{font-size:.83rem;font-weight:600}
+.card .sec{font-size:.65rem;color:#64748b}
+#res{display:none;margin-top:6px}
+.reshead{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.mode-btn{padding:5px 12px;border:1px solid #334155;border-radius:16px;background:transparent;color:#94a3b8;cursor:pointer;font-size:.76rem}
+.mode-btn.on{background:#0ea5e9;border-color:#0ea5e9;color:#fff;font-weight:700}
+table{width:100%;border-collapse:collapse}
+th{background:#1e293b;color:#64748b;font-size:.73rem;text-align:left;padding:7px 11px;border-bottom:1px solid #2d3f55}
+td{padding:8px 11px;border-bottom:1px solid #182030;font-size:.84rem;vertical-align:middle}
+tr:hover td{background:#1a2740}
+.ab{display:inline-block;padding:4px 11px;background:#0ea5e9;color:#fff;border-radius:5px;text-decoration:none;font-size:.75rem;font-weight:700}
+.ab:hover{background:#0284c7}
+.ab.g{background:#4285f4}
+.ab.g:hover{background:#2b6de8}
+.badge{background:#1e3a5f;color:#38bdf8;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:700;display:inline-block}
+#excBox{display:none;margin-top:10px}
+textarea{width:100%;height:140px;background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:7px;padding:9px;font-size:.74rem;font-family:monospace;resize:vertical}
+.foot{margin-top:26px;color:#2d3f55;font-size:.7rem;text-align:center}
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>🔧 Industrial Machine Finder</h1>
-  <p class="subtitle">Cerca simultaneamente su tutti i principali marketplace di macchinari industriali</p>
+<div class="wrap">
+<h1>&#9881; Industrial Machine Finder</h1>
+<p class="sub">Ricerca su 15 marketplace di macchinari industriali &mdash; technomau.github.io/machine-finder</p>
 
-  <div class="search-box">
-    <input type="text" id="keyword" placeholder="es. CNC milling machine, injection molding, press..." autocomplete="off" />
-    <button class="btn btn-primary" onclick="doSearch()">🔍 Cerca</button>
-    <button class="btn btn-success" onclick="openAll()">🚀 Apri Tutti</button>
+<div class="row">
+  <input type="text" id="kw" placeholder="es. CNC lathe, hydraulic press, injection molding, tornio CNC..." />
+  <button class="b1" onclick="doSearch()">Cerca</button>
+  <button class="b2" onclick="openAll()">Apri Tutti</button>
+</div>
+
+<div class="ctrl">
+  <input type="checkbox" id="sa" checked onchange="togAll(this)" style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer">
+  <label for="sa" style="cursor:pointer">Seleziona tutti</label>
+  <span class="cnt" id="cnt">15/15 siti</span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div id="res">
+  <div class="reshead">
+    <button class="mode-btn on" id="mD" onclick="setMode('d')">Link Diretti</button>
+    <button class="mode-btn" id="mG" onclick="setMode('g')">Google site:</button>
+    <span id="rtitle" style="color:#64748b;font-size:.84rem"></span>
   </div>
-
-  <div class="select-all-row">
-    <input type="checkbox" id="selectAll" checked onchange="toggleAll(this)">
-    <label for="selectAll">Seleziona / Deseleziona tutti</label>
-    <span id="countBadge" style="margin-left:8px;"></span>
+  <table>
+    <thead><tr><th>#</th><th>Marketplace</th><th>Settore</th><th>Link</th></tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="b3" onclick="togExc()" style="font-size:.78rem">Esporta per Excel</button>
   </div>
-
-  <div class="sites-grid" id="sitesGrid"></div>
-
-  <div id="results">
-    <h2 id="resultsTitle"></h2>
-    <table id="resultsTable">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Marketplace</th>
-          <th>Settore</th>
-          <th>Link diretto</th>
-        </tr>
-      </thead>
-      <tbody id="resultBody"></tbody>
-    </table>
-    <button class="btn btn-secondary" style="margin-top:14px;" onclick="toggleExcel()">📋 Copia per Excel</button>
-    <div id="copyExcel">
-      <p style="font-size:0.78rem;color:#64748b;margin:8px 0 4px;">Copia il testo qui sotto e incollalo in Excel (Foglio1, cella A1):</p>
-      <textarea id="excelData" readonly></textarea>
-    </div>
+  <div id="excBox">
+    <p style="font-size:.73rem;color:#64748b;margin:8px 0 4px">Copia e incolla in Excel (cella A1):</p>
+    <textarea id="excData" readonly></textarea>
   </div>
+</div>
 
-  <div class="footer">Industrial Machine Finder • Tutti i link aprono i siti originali</div>
+<div class="foot">Industrial Machine Finder &mdash; modifica i siti direttamente su GitHub</div>
 </div>
 
 <script>
-const SITES = [
-  { id: "machinio",      name: "Machinio",        url: "https://www.machinio.com/search?q=",             sector: "Generale",        color: "#1a56db" },
-  { id: "exapro",        name: "Exapro",           url: "https://www.exapro.com/search/?q=",              sector: "Generale",        color: "#7e3af2" },
-  { id: "surplex",       name: "Surplex",          url: "https://www.surplex.com/en/search/?q=",          sector: "Aste",            color: "#e3a008" },
-  { id: "machinepoint",  name: "MachinePoint",     url: "https://www.machinepoint.com/search?q=",         sector: "Plastica/Food",   color: "#0e9f6e" },
-  { id: "machinehub",    name: "Machine Hub",      url: "https://machinehub.com/search?q=",               sector: "CNC/Utensili",    color: "#e02424" },
-  { id: "aucto",         name: "Aucto",            url: "https://www.aucto.com/search?q=",                sector: "Aste",            color: "#ff5a1f" },
-  { id: "mascus",        name: "Mascus",           url: "https://www.mascus.com/search?keyword=",         sector: "Pesante/Edile",   color: "#057a55" },
-  { id: "kitmondo",      name: "Kitmondo",         url: "https://www.kitmondo.com/search/?q=",            sector: "Generale",        color: "#5850ec" },
-  { id: "euromachinery", name: "Euro Machinery",   url: "https://www.euro-machinery.com/?s=",             sector: "Plastica/Riciclo",color: "#6875f5" },
-  { id: "machineryline", name: "MachineryLine",    url: "https://machineryline.info/search/?q=",          sector: "Generale",        color: "#1c64f2" },
-  { id: "machineseeker", name: "MachineSeeker",    url: "https://www.machineseeker.com/en/?q=",           sector: "Generale",        color: "#d61f69" },
-  { id: "trademachines", name: "TradeMachines",    url: "https://trademachines.com/search?q=",            sector: "Aste aggregato",  color: "#9061f9" },
-  { id: "topmachibrokers", name: "Top Machine",    url: "https://www.topmachine.com/?s=",                 sector: "Food/Beverage",   color: "#3f83f8" },
-  { id: "bidspotter",    name: "BidSpotter",       url: "https://www.bidspotter.com/en-us/search?q=",     sector: "Aste industriali",color: "#ff8a4c" },
-  { id: "ironplanet",    name: "IronPlanet",       url: "https://www.ironplanet.com/search?q=",           sector: "Pesante/Mining",  color: "#43a047" },
+var S=[
+ {i:"machinio",   n:"Machinio",       d:"machinio.com",       u:"https://www.machinio.com/listings?search=",           s:"Generale"},
+ {i:"exapro",     n:"Exapro",         d:"exapro.com",         u:"https://www.exapro.com/search/?q=",                   s:"Generale"},
+ {i:"surplex",    n:"Surplex",        d:"surplex.com",        u:"https://www.surplex.com/en/search/?q=",               s:"Aste"},
+ {i:"machpoint",  n:"MachinePoint",   d:"machinepoint.com",   u:"https://www.machinepoint.com/used-machinery/?q=",     s:"Plastica/Food"},
+ {i:"machub",     n:"Machine Hub",    d:"machinehub.com",     u:"https://machinehub.com/search?q=",                    s:"CNC/Utensili"},
+ {i:"aucto",      n:"Aucto",          d:"aucto.com",          u:"https://www.aucto.com/search?q=",                     s:"Aste"},
+ {i:"mascus",     n:"Mascus",         d:"mascus.com",         u:"https://www.mascus.com/search?keyword=",              s:"Pesante/Edile"},
+ {i:"kitmondo",   n:"Kitmondo",       d:"kitmondo.com",       u:"https://www.kitmondo.com/search/?q=",                 s:"Generale"},
+ {i:"euromach",   n:"Euro Machinery", d:"euro-machinery.com", u:"https://www.euro-machinery.com/?s=",                  s:"Plastica/Riciclo"},
+ {i:"machline",   n:"MachineryLine",  d:"machineryline.info", u:"https://machineryline.info/search/?q=",               s:"Generale"},
+ {i:"machseek",   n:"MachineSeeker",  d:"machineseeker.com",  u:"https://www.machineseeker.com/en/?q=",                s:"Generale"},
+ {i:"trademach",  n:"TradeMachines",  d:"trademachines.com",  u:"https://trademachines.com/search?q=",                 s:"Aste aggregato"},
+ {i:"topmach",    n:"Top Machine",    d:"topmachine.com",     u:"https://www.topmachine.com/?s=",                      s:"Food/Beverage"},
+ {i:"bids",       n:"BidSpotter",     d:"bidspotter.com",     u:"https://www.bidspotter.com/en-us/search?q=",          s:"Aste industriali"},
+ {i:"ironpl",     n:"IronPlanet",     d:"ironplanet.com",     u:"https://www.ironplanet.com/search?q=",                s:"Pesante/Mining"}
 ];
 
-// Build site cards
-const grid = document.getElementById("sitesGrid");
-SITES.forEach(s => {
-  const card = document.createElement("div");
-  card.className = "site-card";
-  card.innerHTML = `
-    <input type="checkbox" id="chk_${s.id}" checked onchange="updateCount()">
-    <div>
-      <label for="chk_${s.id}" style="color:${s.color}">${s.name}</label>
-      <div class="tag">${s.sector}</div>
-    </div>`;
-  grid.appendChild(card);
+var mode="d";
+var gr=document.getElementById("grid");
+S.forEach(function(x){
+  var c=document.createElement("div");
+  c.className="card";
+  c.innerHTML='<input type="checkbox" id="x'+x.i+'" checked onchange="updCnt()">'
+    +'<div><div class="nm">'+x.n+'</div><div class="sec">'+x.s+'</div></div>';
+  gr.appendChild(c);
 });
-updateCount();
 
-function updateCount() {
-  const sel = SITES.filter(s => document.getElementById("chk_"+s.id)?.checked).length;
-  document.getElementById("countBadge").innerHTML = `<span class="badge">${sel} siti selezionati</span>`;
+function updCnt(){
+  var n=S.filter(function(x){var e=document.getElementById("x"+x.i);return e&&e.checked;}).length;
+  document.getElementById("cnt").textContent=n+"/"+S.length+" siti";
 }
-
-function toggleAll(cb) {
-  SITES.forEach(s => { const el = document.getElementById("chk_"+s.id); if(el) el.checked = cb.checked; });
-  updateCount();
+function togAll(cb){
+  S.forEach(function(x){var e=document.getElementById("x"+x.i);if(e)e.checked=cb.checked;});
+  updCnt();
 }
-
-function getSelected() {
-  return SITES.filter(s => document.getElementById("chk_"+s.id)?.checked);
+function isc(x){var e=document.getElementById("x"+x.i);return e&&e.checked;}
+function getSel(){return S.filter(isc);}
+function enc(v){return encodeURIComponent(v.trim());}
+function mkUrl(x,kw){
+  return mode==="g"
+    ?"https://www.google.com/search?q="+enc(kw)+"+site:"+x.d
+    :x.u+enc(kw);
 }
-
-function encode(kw) { return encodeURIComponent(kw.trim()); }
-
-function doSearch() {
-  const kw = document.getElementById("keyword").value.trim();
-  if (!kw) { alert("Inserisci un termine di ricerca"); return; }
-  const selected = getSelected();
-  if (!selected.length) { alert("Seleziona almeno un sito"); return; }
-
-  const tbody = document.getElementById("resultBody");
-  tbody.innerHTML = "";
-  selected.forEach((s, i) => {
-    const url = s.url + encode(kw);
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td style="color:#475569">${i+1}</td>
-      <td style="font-weight:600;color:${s.color}">${s.name}</td>
-      <td><span class="badge">${s.sector}</span></td>
-      <td><a class="link-btn" href="${url}" target="_blank" rel="noopener">Apri →</a></td>`;
-    tbody.appendChild(tr);
+function setMode(m){
+  mode=m;
+  document.getElementById("mD").className="mode-btn"+(m==="d"?" on":"");
+  document.getElementById("mG").className="mode-btn"+(m==="g"?" on":"");
+  var kw=document.getElementById("kw").value.trim();
+  if(kw) render(getSel(),kw);
+}
+function render(sel,kw){
+  var tb=document.getElementById("tb"),tsv="Sito	Settore	URL
+";
+  tb.innerHTML="";
+  sel.forEach(function(x,i){
+    var u=mkUrl(x,kw),isG=mode==="g";
+    var tr=document.createElement("tr");
+    tr.innerHTML='<td style="color:#475569">'+(i+1)+'</td>'
+      +'<td><strong>'+x.n+'</strong></td>'
+      +'<td><span class="badge">'+x.s+'</span></td>'
+      +'<td><a class="ab'+(isG?" g":"")+'" href="'+u+'" target="_blank" rel="noopener">'
+      +(isG?"Google":"Apri")+'</a></td>';
+    tb.appendChild(tr);
+    tsv+=x.n+"	"+x.s+"	"+u+"
+";
   });
-
-  document.getElementById("results").style.display = "block";
-  document.getElementById("resultsTitle").textContent = `${selected.length} risultati per: "${kw}"`;
-
-  // Excel export data
-  let tsv = "Sito\tSettore\tURL\n";
-  selected.forEach(s => { tsv += `${s.name}\t${s.sector}\t${s.url + encode(kw)}\n`; });
-  document.getElementById("excelData").value = tsv;
-  document.getElementById("copyExcel").style.display = "none";
-  document.getElementById("results").scrollIntoView({behavior:"smooth"});
+  document.getElementById("excData").value=tsv;
 }
-
-function openAll() {
-  const kw = document.getElementById("keyword").value.trim();
-  if (!kw) { alert("Inserisci prima un termine di ricerca"); return; }
-  const selected = getSelected();
-  if (!selected.length) { alert("Seleziona almeno un sito"); return; }
+function doSearch(){
+  var kw=document.getElementById("kw").value.trim();
+  if(!kw){alert("Inserisci un termine di ricerca");return;}
+  var sel=getSel();
+  if(!sel.length){alert("Seleziona almeno un sito");return;}
+  render(sel,kw);
+  document.getElementById("res").style.display="block";
+  document.getElementById("rtitle").textContent=sel.length+' risultati per: "'+kw+'"';
+  document.getElementById("excBox").style.display="none";
+  document.getElementById("res").scrollIntoView({behavior:"smooth"});
+}
+function openAll(){
+  var kw=document.getElementById("kw").value.trim();
+  if(!kw){alert("Inserisci prima il termine di ricerca");return;}
   doSearch();
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i >= selected.length) { clearInterval(interval); return; }
-    window.open(selected[i].url + encode(kw), "_blank");
-    i++;
-  }, 600);
+  var sel=getSel(),i=0;
+  var t=setInterval(function(){
+    if(i>=sel.length){clearInterval(t);return;}
+    window.open(mkUrl(sel[i],kw),"_blank");i++;
+  },700);
 }
-
-function toggleExcel() {
-  const el = document.getElementById("copyExcel");
-  el.style.display = el.style.display === "none" ? "block" : "none";
-  if (el.style.display === "block") {
-    document.getElementById("excelData").select();
-    document.execCommand("copy");
-  }
+function togExc(){
+  var e=document.getElementById("excBox");
+  e.style.display=e.style.display==="none"?"block":"none";
+  if(e.style.display==="block"){document.getElementById("excData").select();try{document.execCommand("copy");}catch(e){}}
 }
-
-// Enter key trigger
-document.getElementById("keyword").addEventListener("keydown", e => { if(e.key === "Enter") doSearch(); });
+document.getElementById("kw").addEventListener("keydown",function(e){if(e.key==="Enter")doSearch();});
 </script>
 </body>
 </html>
