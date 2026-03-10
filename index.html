@@ -6,117 +6,153 @@
 <title>Industrial Machine Finder</title>
 <style>
 body{margin:0;padding:20px;background:#0f172a;color:#e2e8f0;font-family:Arial,sans-serif}
-h1{color:#38bdf8;font-size:1.4rem;margin:0 0 4px 0}
-.sub{color:#64748b;font-size:.82rem;margin:0 0 18px 0}
-.row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.kw{flex:1;min-width:200px;padding:10px 14px;border-radius:7px;border:1px solid #334155;background:#1e293b;color:#fff;font-size:.95rem;outline:none}
-.kw:focus{border-color:#38bdf8}
-.btn{padding:10px 18px;border:none;border-radius:7px;cursor:pointer;font-weight:700;font-size:.88rem;white-space:nowrap}
-.sitelist{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
-.stag{display:flex;align-items:center;gap:6px;background:#1e293b;border:1px solid #334155;border-radius:7px;padding:7px 10px;cursor:pointer;min-width:140px}
-.stag:hover{border-color:#38bdf8}
-.stag input{width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0}
-.snm{font-size:.84rem;font-weight:600;color:#e2e8f0}
-.ssec{font-size:.64rem;color:#64748b}
-.mode-row{display:flex;gap:6px;margin-bottom:10px}
-.mb{padding:5px 14px;border:1px solid #334155;border-radius:16px;background:transparent;color:#94a3b8;cursor:pointer;font-size:.78rem}
-.mb.on{background:#0ea5e9;border-color:#0ea5e9;color:#fff;font-weight:700}
-table{width:100%;border-collapse:collapse;margin-top:4px}
+input[type=text]{width:100%;padding:11px 14px;border-radius:7px;border:1px solid #334155;background:#1e293b;color:#fff;font-size:.95rem;outline:none;margin-bottom:10px}
+input[type=text]:focus{border-color:#38bdf8}
+table{width:100%;border-collapse:collapse;margin-top:8px}
 th{background:#1e293b;color:#64748b;font-size:.74rem;text-align:left;padding:8px 12px;border-bottom:1px solid #2d3f55}
 td{padding:9px 12px;border-bottom:1px solid #182030;font-size:.85rem;vertical-align:middle}
 tr:hover td{background:#1a2740}
-.lnk{display:inline-block;padding:5px 12px;background:#0ea5e9;color:#fff;border-radius:5px;text-decoration:none;font-size:.76rem;font-weight:700}
-.lnk:hover{background:#0284c7}
-.lnk.g{background:#4285f4}
-.lnk.g:hover{background:#2b6de8}
-.badge{background:#1e3a5f;color:#38bdf8;padding:2px 8px;border-radius:10px;font-size:.69rem;font-weight:700}
+a.lnk{display:inline-block;padding:5px 12px;background:#0ea5e9;color:#fff;border-radius:5px;text-decoration:none;font-size:.76rem;font-weight:700}
 </style>
 </head>
 <body>
-<h1>&#9881; Industrial Machine Finder</h1>
-<p class="sub">Ricerca su 15 marketplace di macchinari industriali &mdash; technomau.github.io/machine-finder</p>
 
-<div class="row">
-  <input class="kw" type="text" id="kw" placeholder="es. CNC lathe, hydraulic press, tornio CNC, pressa..." />
-  <button class="btn" style="background:#0ea5e9;color:#fff" onclick="doSearch()">&#128269; Cerca</button>
-  <button class="btn" style="background:#10b981;color:#fff" onclick="openAll()">&#128640; Apri Tutti</button>
+<h1 style="color:#38bdf8;font-size:1.4rem;margin:0 0 4px 0">&#9881; Industrial Machine Finder</h1>
+<p style="color:#64748b;font-size:.82rem;margin:0 0 18px 0">Ricerca simultanea su 15 marketplace &mdash; technomau.github.io/machine-finder</p>
+
+<input type="text" id="kw" placeholder="es. CNC lathe, tornio, hydraulic press, injection molding..." />
+
+<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+  <button onclick="doSearch()" style="padding:10px 20px;border:none;border-radius:7px;background:#0ea5e9;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer">&#128269; Cerca</button>
+  <button onclick="openAll()" style="padding:10px 20px;border:none;border-radius:7px;background:#10b981;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer">&#128640; Apri Tutti</button>
+  <button onclick="setMode('g')" style="padding:10px 16px;border:none;border-radius:7px;background:#4285f4;color:#fff;font-weight:700;font-size:.82rem;cursor:pointer">Google site:</button>
+  <button onclick="setMode('d')" style="padding:10px 16px;border:none;border-radius:7px;background:#475569;color:#fff;font-weight:700;font-size:.82rem;cursor:pointer">Link Diretti</button>
 </div>
 
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;font-size:.82rem;color:#94a3b8">
-  <input type="checkbox" id="sa" checked onchange="togAll(this)" style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer">
-  <label for="sa" style="cursor:pointer">Seleziona tutti</label>
-  <span class="badge" id="cnt">15/15 siti</span>
-  <button class="btn" style="background:#4285f4;color:#fff;padding:5px 12px;font-size:.76rem" onclick="setMode('g')">&#128269; Usa Google site:</button>
-  <button class="btn" style="background:#475569;color:#fff;padding:5px 12px;font-size:.76rem" onclick="setMode('d')">&#128279; Link Diretti</button>
-</div>
+<p style="color:#94a3b8;font-size:.82rem;margin-bottom:8px">
+  <input type="checkbox" id="sa" checked onchange="togAll(this)" style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;vertical-align:middle">
+  <label for="sa" style="cursor:pointer;margin-left:4px">Seleziona tutti &nbsp;</label>
+  <span id="modebadge" style="background:#1e3a5f;color:#38bdf8;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700">Modalita: Link Diretti</span>
+</p>
 
-<div class="sitelist" id="sitelist"></div>
+<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px">
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xmachinio" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">Machinio</strong><small style="color:#64748b;font-size:.65rem">Generale</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xexapro" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">Exapro</strong><small style="color:#64748b;font-size:.65rem">Generale</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xsurplex" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">Surplex</strong><small style="color:#64748b;font-size:.65rem">Aste</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xmachpt" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">MachinePoint</strong><small style="color:#64748b;font-size:.65rem">Plastica/Food</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xmachub" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">Machine Hub</strong><small style="color:#64748b;font-size:.65rem">CNC/Utensili</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xaucto" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">Aucto</strong><small style="color:#64748b;font-size:.65rem">Aste</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xmascus" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">Mascus</strong><small style="color:#64748b;font-size:.65rem">Pesante/Edile</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xkitmondo" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">Kitmondo</strong><small style="color:#64748b;font-size:.65rem">Generale</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xeuromach" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">Euro Machinery</strong><small style="color:#64748b;font-size:.65rem">Plastica/Riciclo</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xmachline" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">MachineryLine</strong><small style="color:#64748b;font-size:.65rem">Generale</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xmachseek" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">MachineSeeker</strong><small style="color:#64748b;font-size:.65rem">Generale</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xtrademach" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">TradeMachines</strong><small style="color:#64748b;font-size:.65rem">Aste aggregato</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xtopmach" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">Top Machine</strong><small style="color:#64748b;font-size:.65rem">Food/Beverage</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xbids" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">BidSpotter</strong><small style="color:#64748b;font-size:.65rem">Aste industriali</small></span>
+  </label>
+  <label style="display:flex;align-items:center;gap:8px;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:9px 12px;cursor:pointer;min-width:145px">
+    <input type="checkbox" id="xironpl" checked style="width:14px;height:14px;accent-color:#38bdf8;cursor:pointer;flex-shrink:0">
+    <span><strong style="display:block;font-size:.85rem;color:#e2e8f0">IronPlanet</strong><small style="color:#64748b;font-size:.65rem">Pesante/Mining</small></span>
+  </label>
+</div>
 
 <div id="res" style="display:none">
-  <p id="rtitle" style="color:#64748b;font-size:.85rem;margin-bottom:10px"></p>
+  <p id="rtitle" style="color:#64748b;font-size:.85rem;margin-bottom:8px"></p>
   <table>
     <thead><tr><th>#</th><th>Marketplace</th><th>Settore</th><th>Link</th></tr></thead>
     <tbody id="tb"></tbody>
   </table>
-  <button class="btn" style="background:#475569;color:#fff;margin-top:12px;font-size:.78rem" onclick="togExc()">&#128203; Esporta per Excel</button>
+  <button onclick="togExc()" style="margin-top:12px;padding:8px 16px;border:none;border-radius:7px;background:#475569;color:#fff;font-size:.78rem;font-weight:700;cursor:pointer">&#128203; Esporta per Excel</button>
   <div id="excBox" style="display:none;margin-top:10px">
     <p style="font-size:.73rem;color:#64748b;margin:0 0 5px 0">Copia e incolla in Excel (cella A1):</p>
     <textarea id="excData" readonly style="width:100%;height:130px;background:#1e293b;border:1px solid #334155;color:#94a3b8;border-radius:7px;padding:9px;font-size:.74rem;font-family:monospace;resize:vertical"></textarea>
   </div>
 </div>
 
-<p style="margin-top:26px;color:#2d3f55;font-size:.7rem;text-align:center">Industrial Machine Finder &mdash; technomau.github.io/machine-finder</p>
+<p style="margin-top:28px;color:#2d3f55;font-size:.7rem;text-align:center">Industrial Machine Finder &mdash; technomau.github.io/machine-finder</p>
 
 <script>
 var S=[
- {i:"machinio",  n:"Machinio",       d:"machinio.com",       u:"https://www.machinio.com/listings?search=",        s:"Generale"},
- {i:"exapro",    n:"Exapro",         d:"exapro.com",         u:"https://www.exapro.com/search/?q=",                s:"Generale"},
- {i:"surplex",   n:"Surplex",        d:"surplex.com",        u:"https://www.surplex.com/en/search/?q=",            s:"Aste"},
- {i:"machpt",    n:"MachinePoint",   d:"machinepoint.com",   u:"https://www.machinepoint.com/used-machinery/?q=",  s:"Plastica/Food"},
- {i:"machub",    n:"Machine Hub",    d:"machinehub.com",     u:"https://machinehub.com/search?q=",                 s:"CNC/Utensili"},
- {i:"aucto",     n:"Aucto",          d:"aucto.com",          u:"https://www.aucto.com/search?q=",                  s:"Aste"},
- {i:"mascus",    n:"Mascus",         d:"mascus.com",         u:"https://www.mascus.com/search?keyword=",           s:"Pesante/Edile"},
- {i:"kitmondo",  n:"Kitmondo",       d:"kitmondo.com",       u:"https://www.kitmondo.com/search/?q=",              s:"Generale"},
- {i:"euromach",  n:"Euro Machinery", d:"euro-machinery.com", u:"https://www.euro-machinery.com/?s=",               s:"Plastica/Riciclo"},
- {i:"machline",  n:"MachineryLine",  d:"machineryline.info", u:"https://machineryline.info/search/?q=",            s:"Generale"},
- {i:"machseek",  n:"MachineSeeker",  d:"machineseeker.com",  u:"https://www.machineseeker.com/en/?q=",             s:"Generale"},
- {i:"trademach", n:"TradeMachines",  d:"trademachines.com",  u:"https://trademachines.com/search?q=",              s:"Aste aggregato"},
- {i:"topmach",   n:"Top Machine",    d:"topmachine.com",     u:"https://www.topmachine.com/?s=",                   s:"Food/Beverage"},
- {i:"bids",      n:"BidSpotter",     d:"bidspotter.com",     u:"https://www.bidspotter.com/en-us/search?q=",       s:"Aste industriali"},
- {i:"ironpl",    n:"IronPlanet",     d:"ironplanet.com",     u:"https://www.ironplanet.com/search?q=",             s:"Pesante/Mining"}
+  {i:"machinio",n:"Machinio",d:"machinio.com",u:"https://www.machinio.com/listings?search=",s:"Generale"},
+  {i:"exapro",n:"Exapro",d:"exapro.com",u:"https://www.exapro.com/search/?q=",s:"Generale"},
+  {i:"surplex",n:"Surplex",d:"surplex.com",u:"https://www.surplex.com/en/search/?q=",s:"Aste"},
+  {i:"machpt",n:"MachinePoint",d:"machinepoint.com",u:"https://www.machinepoint.com/used-machinery/?q=",s:"Plastica/Food"},
+  {i:"machub",n:"Machine Hub",d:"machinehub.com",u:"https://machinehub.com/search?q=",s:"CNC/Utensili"},
+  {i:"aucto",n:"Aucto",d:"aucto.com",u:"https://www.aucto.com/search?q=",s:"Aste"},
+  {i:"mascus",n:"Mascus",d:"mascus.com",u:"https://www.mascus.com/search?keyword=",s:"Pesante/Edile"},
+  {i:"kitmondo",n:"Kitmondo",d:"kitmondo.com",u:"https://www.kitmondo.com/search/?q=",s:"Generale"},
+  {i:"euromach",n:"Euro Machinery",d:"euro-machinery.com",u:"https://www.euro-machinery.com/?s=",s:"Plastica/Riciclo"},
+  {i:"machline",n:"MachineryLine",d:"machineryline.info",u:"https://machineryline.info/search/?q=",s:"Generale"},
+  {i:"machseek",n:"MachineSeeker",d:"machineseeker.com",u:"https://www.machineseeker.com/en/?q=",s:"Generale"},
+  {i:"trademach",n:"TradeMachines",d:"trademachines.com",u:"https://trademachines.com/search?q=",s:"Aste aggregato"},
+  {i:"topmach",n:"Top Machine",d:"topmachine.com",u:"https://www.topmachine.com/?s=",s:"Food/Beverage"},
+  {i:"bids",n:"BidSpotter",d:"bidspotter.com",u:"https://www.bidspotter.com/en-us/search?q=",s:"Aste industriali"},
+  {i:"ironpl",n:"IronPlanet",d:"ironplanet.com",u:"https://www.ironplanet.com/search?q=",s:"Pesante/Mining"},
 ];
 var mode="d";
-var sl=document.getElementById("sitelist");
-S.forEach(function(x){
-  var d=document.createElement("div");
-  d.className="stag";
-  d.innerHTML='<input type="checkbox" id="x'+x.i+'" checked onchange="updCnt()">'
-    +'<div><div class="snm">'+x.n+'</div><div class="ssec">'+x.s+'</div></div>';
-  sl.appendChild(d);
-});
-function updCnt(){
-  var n=S.filter(function(x){var e=document.getElementById("x"+x.i);return e&&e.checked;}).length;
-  document.getElementById("cnt").textContent=n+"/"+S.length+" siti";
-}
-function togAll(cb){S.forEach(function(x){var e=document.getElementById("x"+x.i);if(e)e.checked=cb.checked;});updCnt();}
 function isc(x){var e=document.getElementById("x"+x.i);return e&&e.checked;}
 function getSel(){return S.filter(isc);}
 function enc(v){return encodeURIComponent(v.trim());}
 function mkUrl(x,kw){return mode==="g"?"https://www.google.com/search?q="+enc(kw)+"+site:"+x.d:x.u+enc(kw);}
-function setMode(m){mode=m;var kw=document.getElementById("kw").value.trim();if(kw)render(getSel(),kw);}
+function setMode(m){
+  mode=m;
+  document.getElementById("modebadge").textContent="Modalita: "+(m==="g"?"Google site:":"Link Diretti");
+  var kw=document.getElementById("kw").value.trim();if(kw)render(getSel(),kw);
+}
+function togAll(cb){S.forEach(function(x){var e=document.getElementById("x"+x.i);if(e)e.checked=cb.checked;});}
 function render(sel,kw){
   var tb=document.getElementById("tb"),tsv="Sito	Settore	URL
 ";
   tb.innerHTML="";
   sel.forEach(function(x,i){
-    var u=mkUrl(x,kw),isG=mode==="g";
+    var u=mkUrl(x,kw);
     var tr=document.createElement("tr");
-    tr.innerHTML='<td style="color:#475569">'+(i+1)+'</td>'
-      +'<td><strong>'+x.n+'</strong></td>'
-      +'<td><span class="badge">'+x.s+'</span></td>'
-      +'<td><a class="lnk'+(isG?" g":"")+'" href="'+u+'" target="_blank" rel="noopener">'+(isG?"Google":"Apri")+'</a></td>';
-    tb.appendChild(tr);
-    tsv+=x.n+"	"+x.s+"	"+u+"
+    tr.innerHTML='<td style="color:#475569">'+(i+1)+'</td><td><strong>'+x.n+'</strong></td>'
+      +'<td><span style="background:#1e3a5f;color:#38bdf8;padding:2px 7px;border-radius:9px;font-size:.68rem;font-weight:700">'+x.s+'</span></td>'
+      +'<td><a class="lnk" href="'+u+'" target="_blank" rel="noopener">Apri &rarr;</a></td>';
+    tb.appendChild(tr);tsv+=x.n+"	"+x.s+"	"+u+"
 ";
   });
   document.getElementById("excData").value=tsv;
@@ -127,7 +163,7 @@ function doSearch(){
   var sel=getSel();if(!sel.length){alert("Seleziona almeno un sito");return;}
   render(sel,kw);
   document.getElementById("res").style.display="block";
-  document.getElementById("rtitle").textContent=sel.length+' siti • ricerca: "'+kw+'"';
+  document.getElementById("rtitle").textContent=sel.length+' siti trovati per: "'+kw+'"';
   document.getElementById("excBox").style.display="none";
   document.getElementById("res").scrollIntoView({behavior:"smooth"});
 }
