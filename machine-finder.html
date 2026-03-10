@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔧 Industrial Machine Search</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 20px; }
+  .container { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.6rem; font-weight: 700; color: #38bdf8; margin-bottom: 4px; }
+  .subtitle { color: #94a3b8; font-size: 0.85rem; margin-bottom: 24px; }
+  .search-box { display: flex; gap: 10px; margin-bottom: 20px; }
+  input[type=text] {
+    flex: 1; padding: 12px 16px; border-radius: 8px; border: 1px solid #334155;
+    background: #1e293b; color: #f1f5f9; font-size: 1rem; outline: none;
+  }
+  input[type=text]:focus { border-color: #38bdf8; }
+  .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: opacity .2s; }
+  .btn:hover { opacity: 0.85; }
+  .btn-primary { background: #0ea5e9; color: white; }
+  .btn-success { background: #10b981; color: white; }
+  .btn-secondary { background: #475569; color: white; }
+  .btn-sm { padding: 6px 12px; font-size: 0.78rem; border-radius: 6px; }
+  .sites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 20px; }
+  .site-card {
+    background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+    padding: 10px 14px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: border-color .2s;
+  }
+  .site-card:hover { border-color: #38bdf8; }
+  .site-card input[type=checkbox] { width: 16px; height: 16px; accent-color: #38bdf8; cursor: pointer; }
+  .site-card label { cursor: pointer; font-size: 0.88rem; font-weight: 500; }
+  .site-card .tag { font-size: 0.68rem; color: #64748b; }
+  .controls { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
+  .controls span { color: #64748b; font-size: 0.82rem; margin-left: 4px; }
+  #results { display: none; }
+  #results h2 { font-size: 1rem; color: #94a3b8; margin-bottom: 12px; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: #1e293b; color: #94a3b8; font-size: 0.78rem; text-align: left; padding: 8px 12px; border-bottom: 1px solid #334155; }
+  td { padding: 10px 12px; border-bottom: 1px solid #1e293b; font-size: 0.88rem; vertical-align: middle; }
+  tr:hover td { background: #1e293b; }
+  a.link-btn {
+    display: inline-block; padding: 5px 12px; background: #0ea5e9; color: white;
+    border-radius: 6px; text-decoration: none; font-size: 0.78rem; font-weight: 600;
+  }
+  a.link-btn:hover { background: #0284c7; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; background: #1e3a5f; color: #38bdf8; }
+  .select-all-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: #94a3b8; font-size: 0.83rem; }
+  #copyExcel { display: none; margin-top: 12px; }
+  textarea#excelData { width: 100%; height: 180px; background: #1e293b; border: 1px solid #334155; color: #94a3b8; border-radius: 8px; padding: 10px; font-size: 0.78rem; font-family: monospace; resize: vertical; }
+  .footer { margin-top: 32px; color: #334155; font-size: 0.75rem; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🔧 Industrial Machine Finder</h1>
+  <p class="subtitle">Cerca simultaneamente su tutti i principali marketplace di macchinari industriali</p>
+
+  <div class="search-box">
+    <input type="text" id="keyword" placeholder="es. CNC milling machine, injection molding, press..." autocomplete="off" />
+    <button class="btn btn-primary" onclick="doSearch()">🔍 Cerca</button>
+    <button class="btn btn-success" onclick="openAll()">🚀 Apri Tutti</button>
+  </div>
+
+  <div class="select-all-row">
+    <input type="checkbox" id="selectAll" checked onchange="toggleAll(this)">
+    <label for="selectAll">Seleziona / Deseleziona tutti</label>
+    <span id="countBadge" style="margin-left:8px;"></span>
+  </div>
+
+  <div class="sites-grid" id="sitesGrid"></div>
+
+  <div id="results">
+    <h2 id="resultsTitle"></h2>
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Marketplace</th>
+          <th>Settore</th>
+          <th>Link diretto</th>
+        </tr>
+      </thead>
+      <tbody id="resultBody"></tbody>
+    </table>
+    <button class="btn btn-secondary" style="margin-top:14px;" onclick="toggleExcel()">📋 Copia per Excel</button>
+    <div id="copyExcel">
+      <p style="font-size:0.78rem;color:#64748b;margin:8px 0 4px;">Copia il testo qui sotto e incollalo in Excel (Foglio1, cella A1):</p>
+      <textarea id="excelData" readonly></textarea>
+    </div>
+  </div>
+
+  <div class="footer">Industrial Machine Finder • Tutti i link aprono i siti originali</div>
+</div>
+
+<script>
+const SITES = [
+  { id: "machinio",      name: "Machinio",        url: "https://www.machinio.com/search?q=",             sector: "Generale",        color: "#1a56db" },
+  { id: "exapro",        name: "Exapro",           url: "https://www.exapro.com/search/?q=",              sector: "Generale",        color: "#7e3af2" },
+  { id: "surplex",       name: "Surplex",          url: "https://www.surplex.com/en/search/?q=",          sector: "Aste",            color: "#e3a008" },
+  { id: "machinepoint",  name: "MachinePoint",     url: "https://www.machinepoint.com/search?q=",         sector: "Plastica/Food",   color: "#0e9f6e" },
+  { id: "machinehub",    name: "Machine Hub",      url: "https://machinehub.com/search?q=",               sector: "CNC/Utensili",    color: "#e02424" },
+  { id: "aucto",         name: "Aucto",            url: "https://www.aucto.com/search?q=",                sector: "Aste",            color: "#ff5a1f" },
+  { id: "mascus",        name: "Mascus",           url: "https://www.mascus.com/search?keyword=",         sector: "Pesante/Edile",   color: "#057a55" },
+  { id: "kitmondo",      name: "Kitmondo",         url: "https://www.kitmondo.com/search/?q=",            sector: "Generale",        color: "#5850ec" },
+  { id: "euromachinery", name: "Euro Machinery",   url: "https://www.euro-machinery.com/?s=",             sector: "Plastica/Riciclo",color: "#6875f5" },
+  { id: "machineryline", name: "MachineryLine",    url: "https://machineryline.info/search/?q=",          sector: "Generale",        color: "#1c64f2" },
+  { id: "machineseeker", name: "MachineSeeker",    url: "https://www.machineseeker.com/en/?q=",           sector: "Generale",        color: "#d61f69" },
+  { id: "trademachines", name: "TradeMachines",    url: "https://trademachines.com/search?q=",            sector: "Aste aggregato",  color: "#9061f9" },
+  { id: "topmachibrokers", name: "Top Machine",    url: "https://www.topmachine.com/?s=",                 sector: "Food/Beverage",   color: "#3f83f8" },
+  { id: "bidspotter",    name: "BidSpotter",       url: "https://www.bidspotter.com/en-us/search?q=",     sector: "Aste industriali",color: "#ff8a4c" },
+  { id: "ironplanet",    name: "IronPlanet",       url: "https://www.ironplanet.com/search?q=",           sector: "Pesante/Mining",  color: "#43a047" },
+];
+
+// Build site cards
+const grid = document.getElementById("sitesGrid");
+SITES.forEach(s => {
+  const card = document.createElement("div");
+  card.className = "site-card";
+  card.innerHTML = `
+    <input type="checkbox" id="chk_${s.id}" checked onchange="updateCount()">
+    <div>
+      <label for="chk_${s.id}" style="color:${s.color}">${s.name}</label>
+      <div class="tag">${s.sector}</div>
+    </div>`;
+  grid.appendChild(card);
+});
+updateCount();
+
+function updateCount() {
+  const sel = SITES.filter(s => document.getElementById("chk_"+s.id)?.checked).length;
+  document.getElementById("countBadge").innerHTML = `<span class="badge">${sel} siti selezionati</span>`;
+}
+
+function toggleAll(cb) {
+  SITES.forEach(s => { const el = document.getElementById("chk_"+s.id); if(el) el.checked = cb.checked; });
+  updateCount();
+}
+
+function getSelected() {
+  return SITES.filter(s => document.getElementById("chk_"+s.id)?.checked);
+}
+
+function encode(kw) { return encodeURIComponent(kw.trim()); }
+
+function doSearch() {
+  const kw = document.getElementById("keyword").value.trim();
+  if (!kw) { alert("Inserisci un termine di ricerca"); return; }
+  const selected = getSelected();
+  if (!selected.length) { alert("Seleziona almeno un sito"); return; }
+
+  const tbody = document.getElementById("resultBody");
+  tbody.innerHTML = "";
+  selected.forEach((s, i) => {
+    const url = s.url + encode(kw);
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td style="color:#475569">${i+1}</td>
+      <td style="font-weight:600;color:${s.color}">${s.name}</td>
+      <td><span class="badge">${s.sector}</span></td>
+      <td><a class="link-btn" href="${url}" target="_blank" rel="noopener">Apri →</a></td>`;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("results").style.display = "block";
+  document.getElementById("resultsTitle").textContent = `${selected.length} risultati per: "${kw}"`;
+
+  // Excel export data
+  let tsv = "Sito\tSettore\tURL\n";
+  selected.forEach(s => { tsv += `${s.name}\t${s.sector}\t${s.url + encode(kw)}\n`; });
+  document.getElementById("excelData").value = tsv;
+  document.getElementById("copyExcel").style.display = "none";
+  document.getElementById("results").scrollIntoView({behavior:"smooth"});
+}
+
+function openAll() {
+  const kw = document.getElementById("keyword").value.trim();
+  if (!kw) { alert("Inserisci prima un termine di ricerca"); return; }
+  const selected = getSelected();
+  if (!selected.length) { alert("Seleziona almeno un sito"); return; }
+  doSearch();
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i >= selected.length) { clearInterval(interval); return; }
+    window.open(selected[i].url + encode(kw), "_blank");
+    i++;
+  }, 600);
+}
+
+function toggleExcel() {
+  const el = document.getElementById("copyExcel");
+  el.style.display = el.style.display === "none" ? "block" : "none";
+  if (el.style.display === "block") {
+    document.getElementById("excelData").select();
+    document.execCommand("copy");
+  }
+}
+
+// Enter key trigger
+document.getElementById("keyword").addEventListener("keydown", e => { if(e.key === "Enter") doSearch(); });
+</script>
+</body>
+</html>
